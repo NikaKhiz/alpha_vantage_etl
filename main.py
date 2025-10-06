@@ -1,4 +1,5 @@
 from database_manager import DatabaseManager
+from data_manager import DataManager
 import os
 from dotenv import load_dotenv
 os.environ.clear()
@@ -10,6 +11,17 @@ def main():
     db_password = os.getenv('DB_PASSWORD')
     db_host = os.getenv('DB_HOST')
     db_name = os.getenv('DB_NAME', 'alpha_vantage_db')
+
+    api_key = os.getenv('ALPHA_VANTAGE_API_KEY')
+
+    SYMBOLS = ['AAPL', 'GOOG', 'MSFT']
+
+    data_manager = DataManager(api_key=api_key)
+
+    for symbol in SYMBOLS:
+        data = data_manager.fetch_data(symbol=symbol)
+        data_manager.save_data(
+            f'{symbol}_' + data['Meta Data']['3. Last Refreshed'], data)
 
     db_manager = DatabaseManager(db_host, db_username, db_password)
     db_manager.connect()
