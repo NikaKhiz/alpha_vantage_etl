@@ -33,6 +33,10 @@ def main():
         transformed_data = data_manager.transform_data(
             data_manager.file_manager.read_from_file(file))
 
+        db_manager.insert_stock_data(
+            df=transformed_data, table='stock_daily_data'
+        )
+
     db_manager.disconnect()
 
     print("ETL pipeline with alpha vantage :)")
