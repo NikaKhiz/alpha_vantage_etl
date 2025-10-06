@@ -36,6 +36,27 @@ class DatabaseManager:
             raise Exception("Database not connected.")
         self.execute_query(f"USE {db_name}")
 
+    def create_table(self, table_name):  # Code to create a table
+        if self.cursor is None:
+            raise Exception("Database not connected.")
+
+        create_table_sql = f"""
+        CREATE TABLE IF NOT EXISTS {table_name} (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            symbol VARCHAR(10) NOT NULL,
+            date DATE NOT NULL,
+            open_price FLOAT,
+            high_price FLOAT,
+            low_price FLOAT,
+            close_price FLOAT,
+            volume BIGINT,
+            daily_change_percentage FLOAT,
+            extraction_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(symbol, date)
+        );
+        """
+        self.execute_query(create_table_sql)
+
     def execute_query(self, query, params=None):  # Code to execute a query
         if self.cursor is None:
             raise Exception("Database not connected.")

@@ -14,6 +14,9 @@ def main():
     db_manager = DatabaseManager(db_host, db_username, db_password)
     db_manager.connect()
     db_manager.exists_or_create_database(db_name)
+    db_manager.use_database(db_name)
+    db_manager.create_table('stock_daily_data')
+    db_manager.disconnect()
 
     print("ETL pipeline with alpha vantage :)")
 
