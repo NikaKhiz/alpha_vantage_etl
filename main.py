@@ -28,6 +28,11 @@ def main():
     db_manager.exists_or_create_database(db_name)
     db_manager.use_database(db_name)
     db_manager.create_table('stock_daily_data')
+
+    for file in os.listdir('raw_data'):
+        transformed_data = data_manager.transform_data(
+            data_manager.file_manager.read_from_file(file))
+
     db_manager.disconnect()
 
     print("ETL pipeline with alpha vantage :)")
