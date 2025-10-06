@@ -57,6 +57,36 @@ class DatabaseManager:
         """
         self.execute_query(create_table_sql)
 
+    def insert_stock_data(self, df, table):
+        if self.cursor is None:
+            raise Exception("Database not connected.")
+
+        insert_query = f"""
+        INSERT INTO {table} (symbol, date, open_price, high_price, low_price, close_price, volume, daily_change_percentage, extraction_timestamp)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        ON DUPLICATE KEY UPDATE
+            open_price = VALUES(open_price),
+            high_price = VALUES(high_price),
+            low_price = VALUES(low_price),
+            close_price = VALUES(close_price),
+            volume = VALUES(volume),
+            daily_change_percentage = VALUES(daily_change_percentage),
+            extraction_timestamp = VALUES(extraction_timestamp);
+        """
+        for _, row in df.iterrows():
+            data = (
+                row['symbol'],
+                row['date'],
+                row['open'],
+                row['high'],
+                row['low'],
+                row['close'],
+                row['volume'],
+                row['daily_change_percentage'],
+                row['extraction_timestamp']
+            )
+            self.execute_query(insert_query, data)
+
     def execute_query(self, query, params=None):  # Code to execute a query
         if self.cursor is None:
             raise Exception("Database not connected.")
