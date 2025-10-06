@@ -21,7 +21,7 @@ def main():
     for symbol in SYMBOLS:
         data = data_manager.fetch_data(symbol=symbol)
         data_manager.save_data(
-            f'{symbol}_' + data['Meta Data']['3. Last Refreshed'], data)
+            f'{symbol}_' + data.meta_data.last_refreshed, data)
 
     db_manager = DatabaseManager(db_host, db_username, db_password)
     db_manager.connect()
